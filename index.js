@@ -2,12 +2,14 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import connectDB from './config/db.js';
 
 
 import postRoutes from './routes/posts.js';
 import userRoutes from './routes/users.js';
 
 const app = express();
+connectDB();
 
 
 app.use(bodyParser.json({ limit: "30mb", extended: true}))
@@ -19,11 +21,6 @@ app.use('/posts', postRoutes)
 app.use('/users', userRoutes)
 
 
-const CONNECTION_URL = "mongodb+srv://codestation:codestation123456@cluster0.nmoqb1c.mongodb.net/?retryWrites=true&w=majority"
-
 const PORT = process.env.PORT || 5000;
-
-mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, UseUnifiedTopology: true})
-    .then(() => app.listen(PORT, () => console.log(`Successfully connected to DB, App running on PORT: ${PORT}`)))
-    .catch((error) => console.log(error.message) )
+app.listen(PORT)
 

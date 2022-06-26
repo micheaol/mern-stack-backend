@@ -7,7 +7,7 @@ import connectDB from './config/db.js';
 
 import postRoutes from './routes/posts.js';
 import userRoutes from './routes/users.js';
-
+import authRoutes from './routes/auth.js'
 const app = express();
 connectDB();
 
@@ -17,8 +17,10 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true}))
 app.use(cors());
 
 
-app.use('/posts', postRoutes)
-app.use('/users', userRoutes)
+
+app.use('/api/v1/posts', postRoutes)
+app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/auth', authRoutes)
 
 
 const PORT = process.env.PORT || 5000;

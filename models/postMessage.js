@@ -2,17 +2,28 @@ import mongoose from 'mongoose';
 
 
 const postSchema = mongoose.Schema({
-    title: String,
-    message: String,
-    creator: String,
-    tags: [String],
+    title: {
+        type: String,
+        require: true,
+    },
+    message: {
+        type: String,
+        require: true
+    },
+    creator: {
+        type: String,
+        require: true
+    },
+    
     likes: {
         type: Number,
-        default: 0
+        default: 0,
+        require: true
     },
     createdAt: {
         type: Date,
-        default: new Date()
+        default: new Date(),
+        require: true
     },
 });
 

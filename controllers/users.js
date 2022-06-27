@@ -1,4 +1,4 @@
-import Users from "../models/user.js";
+import User from "../models/user.js";
 import gravatar from "gravatar";
 import config from 'config';
 import jwt from 'jsonwebtoken';
@@ -14,7 +14,7 @@ export const createUser =  async (req, res) => {
     const { name, email, password, } = req.body
 
     try {
-        let user = await Users.findOne({ email });
+        let user = await User.findOne({ email });
 
         if (user) {
             return res.status(400).json({ error: [{ message: "User already exist"}]})
@@ -26,7 +26,7 @@ export const createUser =  async (req, res) => {
             d: "mm"
         })
 
-        user = new Users({
+        user = new User({
             name,
             email,
             password,

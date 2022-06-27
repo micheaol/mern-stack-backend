@@ -8,6 +8,7 @@ import connectDB from './config/db.js';
 import postRoutes from './routes/posts.js';
 import userRoutes from './routes/users.js';
 import authRoutes from './routes/auth.js'
+import profileRoutes from './routes/profile.js';
 const app = express();
 connectDB();
 
@@ -21,6 +22,7 @@ app.use(cors());
 app.use('/api/v1/posts', postRoutes)
 app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/profile', profileRoutes)
 
 
 const PORT = process.env.PORT || 5000;

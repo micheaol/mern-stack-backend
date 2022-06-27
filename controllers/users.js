@@ -1,49 +1,47 @@
-import User from "../models/user.js"
+import Users from "../models/user.js";
+import gravatar from "gravatar";
+import bcrypt from "bcryptjs";
 
-import { check, validationResult } from 'express-validator';
 
-//User validator:
-export const validateUser = [
-    check('name', 'Name can not be empty, it must be atleast 5 character!')
-      .trim()
-      .escape()
-      .not()
-      .isEmpty()
-      .bail()
-      .isLength({min: 5})
-      .bail(),
-    check('email', 'Invalid email address!').isEmail(),
-    check('password', 'Your password must be atleast 6 or more')
-      .isLength({ min: 6 }),
-    (req, res, next) => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty())
-        return res.status(422).json({errors: errors.array()});
-      next();
-    },
-  ];
+export const getUsers = async (req, res) => {
+  
+}
 
-export const getUsers =  async (req, res) => {
+
+export const createUser =  async (req, res) => {
+    const { name, email, password, } = req.body
+
     try {
-        const users = await User.find()
+        let user = await Users.findOne({ email });
+
+        if (user) {
+            return res.status(400).json({ error: [{ message: "User already exist"}]})
+        }
+
+        const avatar = gravatar.url(email, {
+            s: "200",
+            r: "pg",
+            d: "mm"
+        })
+
+        user = new Users({
+            name,
+            email,
+            password,
+            avatar
+        })
+
+        const salt = await bcrypt.genSalt(10);
+
+        user.password = await bcrypt.hash(password, salt);
+
+        await user.save()
         
-        res.status(200).json(users)
+        res.send("User created succeful")
 
     } catch (error) {
-        res.status(404).json({message: error.message})
+        console.log(error.message)
+        res.status(500).send("Server error")
     }
 }
 
-export const createUser = async (req, res) => {
-   const user = req.body
-   const newUser = new User(user)
-
-   try {
-       await newUser.save()
-
-       res.status(201).json(newUser);
-       
-   } catch (error) {
-       res.status(409).json({message: error.message})
-   }
-}
